@@ -19,7 +19,7 @@ const db = mongoose.connection;
 db.on('error', (err) => console.log(err));
 
 db.once('open', () => {
-    require('./routes/customers.js')(server);
+    require('./routes/customers')(server);
     console.log(`Server started on PORT:${config.PORT}`)
 })
 

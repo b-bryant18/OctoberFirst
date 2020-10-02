@@ -20,5 +20,5 @@ const customerSchema = new mongoose.Schema({
 //Records 'created at' & 'updated at' message automatically
 customerSchema.plugin(timestamp);
 
-const customer = mongose.model('Customer', customerSchema);
+const customer = mongoose.model('Customer', customerSchema);
 module.exports = customer;
