@@ -2,7 +2,7 @@ const errors = require('restify-errors');
 const Customer = require('../models/Customer');
 
 module.exports = server => {
-    //Get Customers
+    //Get All Customers
     server.get('/customers', async (req, res, next) => {
         try {
             const customers = await Customer.find({});
@@ -12,6 +12,20 @@ module.exports = server => {
             return next(new errors.InvalidContentError(err));
         }
     });
+
+    // Get Single Customer
+    server.get('/customers/:id', async (req, res, next) => {
+        try {
+            const customer = await Customer.findById(req.params.id);
+            res.send(customer);
+            next();
+        } catch (err) {
+            return next(new errors.ResourceNotFoundError(`There is no customer with 
+            the ID of ${req.params.id}`));
+        }
+    });
+
+
 
     // Add Customer
     server.post('/customers', async (req, res, next) => {
