@@ -68,7 +68,7 @@ module.exports = server => {
 
         try {
             const customer = await Customer.findOneAndUpdate({ _id: req.params.id }, req.body);
-            //Accesses the Customer database model directly not customer var
+            //Accesses the Customer database model directly not customer var 
             //findOneAndUpdate is used to only update one parameter of an object like updating customer's balance
             res.send(200);
             //means newCustomer object was created
@@ -79,5 +79,16 @@ module.exports = server => {
         }
     });
 
+    // Delete Customer
+    server.del('/customers/:id', async (req, res, next) => {
+        try {
+            const customer = await Customer.findOneAndRemove({ _id: req.params.id })
+            res.send(204);
+            next();
+        } catch (err) {
+            return next(new errors.ResourceNotFoundError(`There is no customer with 
+            the ID of ${req.params.id}`));
+        }
+    });
 };
 
