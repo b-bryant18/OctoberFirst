@@ -20,13 +20,17 @@ module.exports = server => {
             return next(new errors.InvalidContentError("Expects 'apllication/json' "));
         }
 
+        // Creates customer object
         const { name, email, balance } = req.body;
+        //Instead of req.body.name, req.body.email, etc. 
+        // Don't need name = name, email = email bc I'm using ES6
         const customer = new Customer({
             name,
             email,
             balance
         });
 
+        // Saves customer to database
         try {
             const newCustomer = await customer.save();
             res.send(201);
