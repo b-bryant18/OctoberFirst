@@ -13,6 +13,10 @@ module.exports = server => {
         }
     });
 
+    //Async/Await: waits for customer object to get found, then gets saved to customer const
+    //Sends response once found
+    //Upon completion of a function, call 'next' to move to the next function in the chain
+
     // Get Single Customer
     server.get('/customers/:id', async (req, res, next) => {
         try {
@@ -26,10 +30,9 @@ module.exports = server => {
     });
 
 
-
     // Add Customer
     server.post('/customers', async (req, res, next) => {
-        //Check is content type is NOT JSON
+        //Check if content type is NOT JSON
         if (!req.is('application/json')) {
             return next(new errors.InvalidContentError("Expects 'apllication/json' "));
         }
@@ -54,7 +57,27 @@ module.exports = server => {
             return next(new errors.InternalError(err.message));
         }
     });
+
+    // Update customer
+    //put methods are for updating objects
+    server.put('/customers/:id', async (req, res, next) => {
+        //Check if content type is NOT JSON
+        if (!req.is('application/json')) {
+            return next(new errors.InvalidContentError("Expects 'apllication/json' "));
+        }
+
+        try {
+            const customer = await Customer.findOneAndUpdate({ _id: req.params.id }, req.body);
+            //Accesses the Customer database model directly not customer var
+            //findOneAndUpdate is used to only update one parameter of an object like updating customer's balance
+            res.send(200);
+            //means newCustomer object was created
+            next();
+        } catch (err) {
+            return next(new errors.ResourceNotFoundError(`There is no customer with 
+            the ID of ${req.params.id}`));
+        }
+    });
+
 };
-//waits for customer object to get back, then gets saved to customer const
-//then sends response once found
-//Upon completion of a function, call 'next' to move to the next function in the chain
+
