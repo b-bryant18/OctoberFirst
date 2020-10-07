@@ -32,7 +32,7 @@ module.exports = server => {
     server.post('/auth', async (req, res, next) => {
         try {
             // Authenticate user
-            const user = auth.authenticate(email, password);
+            const user = await auth.authenticate(email, password);
             console.log(user);
             next();
         } catch (err) {
