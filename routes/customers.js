@@ -1,5 +1,7 @@
 const errors = require('restify-errors');
+const rjwt = require('restify-jwt-community');
 const Customer = require('../models/Customer');
+const config = require('../config');
 
 module.exports = server => {
     //Get All Customers
@@ -31,7 +33,7 @@ module.exports = server => {
 
 
     // Add Customer
-    server.post('/customers', async (req, res, next) => {
+    server.post('/customers', rjwt({ secret: config.JWT_SECRET }), async (req, res, next) => {
         //Check if content type is NOT JSON
         if (!req.is('application/json')) {
             return next(new errors.InvalidContentError("Expects 'apllication/json' "));
@@ -58,9 +60,9 @@ module.exports = server => {
         }
     });
 
-    // Update customer
+    // Update Customer
     //put methods are for updating objects
-    server.put('/customers/:id', async (req, res, next) => {
+    server.put('/customers/:id', rjwt({ secret: config.JWT_SECRET }), async (req, res, next) => {
         //Check if content type is NOT JSON
         if (!req.is('application/json')) {
             return next(new errors.InvalidContentError("Expects 'apllication/json' "));
@@ -80,7 +82,7 @@ module.exports = server => {
     });
 
     // Delete Customer
-    server.del('/customers/:id', async (req, res, next) => {
+    server.del('/customers/:id', rjwt({ secret: config.JWT_SECRET }), async (req, res, next) => {
         try {
             const customer = await Customer.findOneAndRemove({ _id: req.params.id })
             res.send(204);
