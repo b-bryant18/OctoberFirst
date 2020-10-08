@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const auth = require('../auth');
+const config = require('../config');
 
 module.exports = server => {
     //Register User
@@ -37,7 +38,14 @@ module.exports = server => {
             const user = await auth.authenticate(email, password);
 
             // Create JSON Web Token
-            const token = jwt.sign(user.toJSON());
+            const token = jwt.sign(user.toJSON(), config.JWT_SECRET, {
+                expiresIn: '15m'
+            });
+
+            const { iat, exp } = jwt.decode(token);
+
+            // Respond with token to authenticated user
+            res.send({ iat, exp, token });
 
             next();
         } catch (err) {
