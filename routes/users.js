@@ -35,6 +35,10 @@ module.exports = server => {
         try {
             // Authenticate user
             const user = await auth.authenticate(email, password);
+
+            // Create JSON Web Token
+            const token = jwt.sign(user.toJSON());
+
             next();
         } catch (err) {
             // User Unauthorized
