@@ -42,6 +42,7 @@ module.exports = server => {
                 expiresIn: '15m'
             });
 
+            // iat: Issued At Time, exp: expiration
             const { iat, exp } = jwt.decode(token);
 
             // Respond with token to authenticated user
